@@ -1,0 +1,8 @@
+﻿# Ignore generated and local files
+README.utf8.md
+*.pdf
+*.epub
+*.o
+*.class
+__pycache__/
+.DS_Store
