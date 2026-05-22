@@ -1,0 +1,35 @@
+﻿name: CI - Markdown Lint & Link Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  markdown:
+    name: Markdown checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install and run markdownlint
+        run: |
+          npx --yes markdownlint-cli "**/*.md"
+
+      - name: Run markdown link checker
+        run: |
+          # Use git to list markdown files to avoid node_modules etc.
+          files=$(git ls-files "*.md")
+          if [ -z "$files" ]; then
+            echo "No markdown files found"
+            exit 0
+          fi
+          npx --yes markdown-link-check -q --retry 3 $files
+
